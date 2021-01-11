@@ -45,8 +45,10 @@ class InstagramApp:
                      "papateachme", "scoobysworkshop", "bbcnews", "ancient_origins", "atlasobscura",
                      "jimmy.nelson.official", "atodaleche", "teslamotors", "cuestafrank", "natgeotravel", "paulnicklen",
                      "madrid_secreto", "iflscience", "nasa", "eminem"]
-        for f in self.followees():
-            if f not in self.followers() and f not in skip_list:
+        followers = user1.followers()
+        followees = user1.followees()
+        for f in followees:
+            if f not in followers and f not in skip_list:
                 print(f)
 
 
@@ -56,7 +58,7 @@ if __name__ == '__main__':
     user_cred = json.load(open("user.json", "r"))
     user1 = InstagramApp(user_cred["user"], user_cred["password"])
     user1.login()
-    # user1.followers()
-    # user1.followees()
     user1.unfollow()
-    # user1.close()
+    user1.close()
+
+
