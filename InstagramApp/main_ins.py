@@ -60,5 +60,3 @@ if __name__ == '__main__':
     user1.login()
     user1.unfollow()
     user1.close()
-
-
