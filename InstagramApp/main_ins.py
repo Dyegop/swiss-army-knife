@@ -7,11 +7,6 @@ class InstagramApp:
     def __init__(self, user, password):
         """
         Class to manage instagram connections and functionalities
-
-        Attributes:
-            -instaloader:
-            -profile:
-
         :param user: instagram user
         :param password: instagram password
         """
