@@ -39,7 +39,8 @@ class InstagramApp:
                      "spacex", "danielkordan", "natgeo", "kpunkka", "davidlloyd", "itsabandoned", "8fact", "science",
                      "papateachme", "scoobysworkshop", "bbcnews", "ancient_origins", "atlasobscura",
                      "jimmy.nelson.official", "atodaleche", "teslamotors", "cuestafrank", "natgeotravel", "paulnicklen",
-                     "madrid_secreto", "iflscience", "nasa", "eminem", "discoverwildlife", "jmvillatoro_psicologo"]
+                     "madrid_secreto", "iflscience", "nasa", "eminem", "discoverwildlife", "jmvillatoro_psicologo",
+                     "ancient.scientist"]
         followers = user1.followers()
         followees = user1.followees()
         for f in followees:
