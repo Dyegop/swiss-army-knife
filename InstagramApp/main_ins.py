@@ -12,7 +12,7 @@ class InstagramApp:
         :param password: instagram password
         """
         self.user = user
-        self.password = password
+        self._password = password
         self._instaloader = instaloader.Instaloader()
         self._context = self._instaloader.context
         self._profile = instaloader.Profile.from_username(self._context, user)
@@ -20,7 +20,7 @@ class InstagramApp:
     def login(self):
         print(f"Start application for user {self.user}")
         try:
-            self._instaloader.login(self.user, self.password)
+            self._instaloader.login(self.user, self.user)
             print("Login successful\n")
         except instaloader.InstaloaderException:
             print(f"Exception found\n")
