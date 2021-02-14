@@ -27,18 +27,20 @@ def main_menu():
 
 
 # Output menu
-def output_menu():
+def output_menu(n=3):
     i = 0
-    while i < 5:
-        options = input(f"Select output folder? Y/N\nDefault: {filter_obj.output_dir}\n").upper()
-        if i == 4:
-            break
+    while i < n:
+        options = input(f"Select output directory? Y/N\nDefault: {filter_obj.outputDir}\n").upper()
         if options == 'Y':
-            filter_obj.set_output_dir()
+            filter_obj.set_outputDir()
+            break
         elif options == 'N':
             break
         else:
-            print("Incorrect option. Please, try again")
+            if i == n-1:
+                print("Too many incorrect options, using default output directory")
+            else:
+                print("Incorrect option. Please, try again")
 
 
 
@@ -49,6 +51,7 @@ if __name__ == '__main__':
     print("------------------------Regex Searcher------------------------")
     print()
     filter_obj = fc.Filter()
+    # print(filter_obj.__str__())
     time.sleep(2)
 
     while True:

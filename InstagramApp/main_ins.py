@@ -1,29 +1,35 @@
+from datetime import datetime
+import sys
 import instaloader
 import json
 import heapq
+from itertools import takewhile, dropwhile
 
 
 
 class InstagramApp:
-    def __init__(self, user, password):
+    def __init__(self, user_name, password):
         """
         Class to manage instagram connections and functionalities
         :param user: instagram user
         :param password: instagram password
         """
-        self.user = user
+        self.user_name = user_name
         self._password = password
         self._instaloader = instaloader.Instaloader()
         self._context = self._instaloader.context
-        self._profile = instaloader.Profile.from_username(self._context, user)
+        self._profile = instaloader.Profile.from_username(self._context, user_name)
 
     def login(self):
-        print(f"Start application for user {self.user}")
+        print(f"Start application for user {self.user_name}")
         try:
-            self._instaloader.login(self.user, self.user)
+            self._instaloader.login(self.user_name, self._password)
             print("Login successful\n")
+        except instaloader.BadCredentialsException:
+            print("Login error, check your credentials\n")
+            raise sys.exit()
         except instaloader.InstaloaderException:
-            print(f"Exception found\n")
+            print("Exception found\n")
             raise
 
     def close(self):
@@ -39,7 +45,7 @@ class InstagramApp:
 
     # Return top n likes and posts url
     def top_n_likes(self, n):
-        print(f"Getting the {n} most liked photos for {self.user}...")
+        print(f"Getting the {n} most liked photos for {self.user_name}...")
         # Get post likes and shortcodes
         dict_likes = {f.shortcode: f.likes for f in self._profile.get_posts()}
         # Get max number of likes
@@ -60,6 +66,16 @@ class InstagramApp:
                 print(f)
         print()
 
+    # Download stories from user in a range of time
+    # TODO Improve data output
+    def download_posts(self, since, user_name):
+        new_profile = instaloader.Profile.from_username(self._context, user_name)
+        print(f"Downloading posts for user {user_name}")
+        for post in takewhile(lambda p: p.date > since, new_profile.get_posts()):
+            print(f"Date {post.date}")
+            self._instaloader.download_post(post, user_name)
+
+
 
 
 
@@ -69,5 +85,6 @@ if __name__ == '__main__':
     user1 = InstagramApp(user_cred["user"], user_cred["password"])
     user1.login()
     user1.unfollow()
-    user1.top_n_likes(10)
+    # user1.top_n_likes(10)
+    # user1.download_posts(datetime(2019, 1, 12), "type_user_name")
     user1.close()
