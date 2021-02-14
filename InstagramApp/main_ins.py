@@ -1,9 +1,8 @@
-from datetime import datetime
 import sys
 import instaloader
 import json
 import heapq
-from itertools import takewhile, dropwhile
+from itertools import takewhile
 
 
 
@@ -11,7 +10,7 @@ class InstagramApp:
     def __init__(self, user_name, password):
         """
         Class to manage instagram connections and functionalities
-        :param user: instagram user
+        :param user_name: instagram user
         :param password: instagram password
         """
         self.user_name = user_name
