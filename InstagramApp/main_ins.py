@@ -2,6 +2,8 @@ import sys
 import instaloader
 import json
 import heapq
+import pyinputplus as pyip
+from datetime import datetime
 from itertools import takewhile
 
 
@@ -63,7 +65,6 @@ class InstagramApp:
         for f in followees:
             if f not in followers and f not in skip_list:
                 print(f)
-        print()
 
     # Download stories from user in a range of time
     # TODO Improve data output
@@ -81,9 +82,26 @@ class InstagramApp:
 # Main
 if __name__ == '__main__':
     user_cred = json.load(open("user.json", "r"))
+    user_options = ["Check people not following you back", "Get top 10 likes", "Download posts from user", "Exit"]
     user1 = InstagramApp(user_cred["user"], user_cred["password"])
     user1.login()
-    user1.unfollow()
-    # user1.top_n_likes(10)
-    # user1.download_posts(datetime(2019, 1, 12), "type_user_name")
-    user1.close()
+
+    # Menu
+    while True:
+        # Return integer based on choice
+        choice = user_options.index(pyip.inputMenu(user_options, numbered=True, allowRegexes=['(1-4)'], limit=10))+1
+        print()
+
+        # Execute action for each choice
+        if choice == 1:
+            user1.unfollow()
+        elif choice == 2:
+            user1.top_n_likes(10)
+        elif choice == 3:
+            user_n = input("Type instagram username: ")
+            date_since = input("Type beginning date to download in format YYYY, MM, DD: ")
+            user1.download_posts(datetime.strptime(date_since, "%Y, %m, %d"), user_n)
+        elif choice == 4:
+            user1.close()
+            sys.exit()
+        print("\n")
