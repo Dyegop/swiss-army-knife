@@ -2,6 +2,7 @@ import sys
 import instaloader
 import json
 import heapq
+import time
 import pyinputplus as pyip
 from datetime import datetime
 from itertools import takewhile
@@ -23,15 +24,23 @@ class InstagramApp:
 
     def login(self):
         print(f"Start application for user {self.user_name}")
-        try:
-            self._instaloader.login(self.user_name, self._password)
-            print("Login successful\n")
-        except instaloader.BadCredentialsException:
-            print("Login error, check your credentials\n")
-            raise sys.exit()
-        except instaloader.InstaloaderException:
-            print("Exception found\n")
-            raise
+        i = 0
+        while True:
+            try:
+                self._instaloader.login(self.user_name, self._password)
+                print("Login successful\n")
+                break
+            except instaloader.BadCredentialsException:
+                print("Login error, check your credentials\n")
+                time.sleep(5)
+                raise sys.exit()
+            except instaloader.InstaloaderException:
+                if i == 2:
+                    print("Login error\n")
+                    raise
+                print("Exception found\n")
+                print("Trying again...")
+                i += 1
 
     def close(self):
         self._instaloader.close()
@@ -75,6 +84,17 @@ class InstagramApp:
             print(f"Date {post.date}")
             self._instaloader.download_post(post, user_name)
 
+    # Download stories from user in a range of time
+    # TODO Improve data output
+    def download_videos(self, since, user_name):
+        new_profile = instaloader.Profile.from_username(self._context, user_name)
+        print(f"Downloading videos for user {user_name}")
+        for post in takewhile(lambda p: p.date > since, new_profile.get_posts()):
+            if post.is_video:
+                print(f"Date {post.date}")
+                self._instaloader.download_post(post, user_name)
+
+
 
 
 
@@ -82,14 +102,15 @@ class InstagramApp:
 # Main
 if __name__ == '__main__':
     user_cred = json.load(open("user.json", "r"))
-    user_options = ["Check people not following you back", "Get top 10 likes", "Download posts from user", "Exit"]
+    user_options = ["Check people not following you back", "Get top 10 likes", "Download posts from user",
+                    "Download videos from user", "Exit"]
     user1 = InstagramApp(user_cred["user"], user_cred["password"])
     user1.login()
 
     # Menu
     while True:
         # Return integer based on choice
-        choice = user_options.index(pyip.inputMenu(user_options, numbered=True, allowRegexes=['(1-4)'], limit=10))+1
+        choice = user_options.index(pyip.inputMenu(user_options, numbered=True, allowRegexes=['(1-5)'], limit=10))+1
         print()
 
         # Execute action for each choice
@@ -102,6 +123,10 @@ if __name__ == '__main__':
             date_since = input("Type beginning date to download in format YYYY, MM, DD: ")
             user1.download_posts(datetime.strptime(date_since, "%Y, %m, %d"), user_n)
         elif choice == 4:
+            user_n = input("Type instagram username: ")
+            date_since = input("Type beginning date to download in format YYYY, MM, DD: ")
+            user1.download_posts(datetime.strptime(date_since, "%Y, %m, %d"), user_n)
+        elif choice == 5:
             user1.close()
             sys.exit()
         print("\n")
