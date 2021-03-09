@@ -57,7 +57,6 @@ if __name__ == '__main__':
     while True:
         main_menu()
         time.sleep(1)
-
         output_menu()
         time.sleep(1)
 

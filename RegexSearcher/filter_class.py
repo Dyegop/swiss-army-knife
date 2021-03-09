@@ -78,8 +78,6 @@ class Filter:
         except UnicodeDecodeError:
             print("Encode error. Try different encoding")
 
-
-
     def select_pattern(self):
         options = ['Email', 'Mobile phone', 'Url']
         choice = pyip.inputMenu(options, numbered=True, allowRegexes=['(1-3)'], limit=10)

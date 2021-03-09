@@ -13,8 +13,8 @@ import sys
 
 
 # Variables
-open_weather_api = json.load(open("api_key.json", "r"))  # API key
-t = 60                                                   # Refresh time in seconds
+open_weather_api = json.load(open("openWeatherAPI.json", "r"))  # API key
+t = 120                                                          # Refresh time in seconds
 
 
 # Check input parameters and get location
