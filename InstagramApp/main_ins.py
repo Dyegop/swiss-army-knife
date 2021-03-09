@@ -47,11 +47,11 @@ class InstagramApp:
 
     # Return followers
     def followers(self):
-        return [f.username for f in self._profile.get_followers()]
+        return set(f.username for f in self._profile.get_followers())
 
     # Return followees
     def followees(self):
-        return [f.username for f in self._profile.get_followees()]
+        return set(f.username for f in self._profile.get_followees())
 
     # Return top n likes and posts url
     def top_n_likes(self, n):
@@ -68,12 +68,11 @@ class InstagramApp:
     # Get people that doesn't follow you back
     def unfollow(self):
         print(f"Checking followees that aren't followers...")
-        skip_list = [i.rstrip("\n") for i in open("skip_list.txt", "r")]
-        followers = self.followers()
-        followees = self.followees()
-        for f in followees:
-            if f not in followers and f not in skip_list:
-                print(f)
+        skip_list = [i.rstrip("\n") for i in open("data/skip_list.txt", "r")]
+        followers = set(self._profile.get_followers())
+        followees = set(self._profile.get_followees())
+        unfollow = [f.username for f in followees.difference(followers) if f.username not in skip_list]
+        print("\n".join(unfollow))
 
     # Download stories from user in a range of time
     # TODO Improve data output
@@ -98,10 +97,9 @@ class InstagramApp:
 
 
 
-
-# Main
+# Start application
 if __name__ == '__main__':
-    user_cred = json.load(open("user.json", "r"))
+    user_cred = json.load(open("data/user.json", "r"))
     user_options = ["Check people not following you back", "Get top 10 likes", "Download posts from user",
                     "Download videos from user", "Exit"]
     user1 = InstagramApp(user_cred["user"], user_cred["password"])
